@@ -14,11 +14,17 @@ namespace Pong;
 /// </summary>
 public class Pong : PhysicsGame
 {
+    private readonly Vector nopeusYlos = new Vector(0, 200);
+    private readonly Vector nopeusAlas = new Vector(0, -200);
     public override void Begin()
     {
         PhysicsObject pallo = LuoPallo(this, -200, 0);
+        PhysicsObject maila1 = LuoMaila(this,Level.Left + 20.0, 0.0);
+        PhysicsObject maila2 = LuoMaila(this,Level.Right - 20.0, 0.0);
         
         LuoKentta();
+        AsetaOhjaimet(maila1, maila2);
+        
         AloitaPeli(pallo);
         
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
@@ -26,9 +32,6 @@ public class Pong : PhysicsGame
 
     private void LuoKentta()
     {
-        LuoMaila(this,Level.Left + 20.0, 0.0);
-        LuoMaila(this,Level.Right - 20.0, 0.0);
-        
         Level.CreateBorders(1.0, false);
         Level.Background.Color = Color.Black;
         
@@ -61,6 +64,27 @@ public class Pong : PhysicsGame
     {
         Vector impulssi = new Vector(500.0, 0.0);
         pallo.Hit(impulssi * pallo.Mass);
+    }
+    private void AsetaOhjaimet(PhysicsObject maila1, PhysicsObject maila2)
+    {
+        Keyboard.Listen(Key.A, ButtonState.Down, AsetaNopeus, "Pelaaja 1: Liikuta mailaa ylös", maila1, nopeusYlos);
+        Keyboard.Listen(Key.A, ButtonState.Released, AsetaNopeus, null, maila1, Vector.Zero);
+        Keyboard.Listen(Key.Z,    ButtonState.Down,     AsetaNopeus, "Pelaaja 1: Liikuta mailaa alas", maila1, nopeusAlas);
+        Keyboard.Listen(Key.Z,    ButtonState.Released, AsetaNopeus, null,                             maila1, Vector.Zero);
+
+        Keyboard.Listen(Key.Up,   ButtonState.Down,     AsetaNopeus, "Pelaaja 2: Liikuta mailaa ylös", maila2, nopeusYlos);
+        Keyboard.Listen(Key.Up,   ButtonState.Released, AsetaNopeus, null,                             maila2, Vector.Zero);
+        Keyboard.Listen(Key.Down, ButtonState.Down,     AsetaNopeus, "Pelaaja 2: Liikuta mailaa alas", maila2, nopeusAlas);
+        Keyboard.Listen(Key.Down, ButtonState.Released, AsetaNopeus, null,                             maila2, Vector.Zero);
+        Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
+
+
+
+        Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
+    }    
+    public static void AsetaNopeus(PhysicsObject maila, Vector nopeus)
+    {
+        maila.Velocity = nopeus;
     }
     
 }
