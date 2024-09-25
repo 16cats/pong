@@ -26,11 +26,8 @@ public class Pong : PhysicsGame
 
     private void LuoKentta()
     {
-        PhysicsObject maila = PhysicsObject.CreateStaticObject(20.0, 100.0, Shape.Rectangle);
-        maila.X = Level.Left + 20.0;
-        maila.Y = 0.0;
-        maila.Restitution = 1.0;
-        Add(maila);
+        LuoMaila(this,Level.Left + 20.0, 0.0);
+        LuoMaila(this,Level.Right - 20.0, 0.0);
         
         Level.CreateBorders(1.0, false);
         Level.Background.Color = Color.Black;
@@ -48,6 +45,16 @@ public class Pong : PhysicsGame
         pallo.MomentOfInertia = double.PositiveInfinity;
         peli.Add(pallo);
         return pallo;
+    }
+    
+    public static PhysicsObject LuoMaila(PhysicsGame peli, double x, double y)
+    {
+        PhysicsObject maila = PhysicsObject.CreateStaticObject(20.0, 100.0, Shape.Rectangle);
+        maila.X = x;
+        maila.Y = y;
+        maila.Restitution = 1.0;
+        peli.Add(maila);
+        return maila;
     }
     
     private static void AloitaPeli(PhysicsObject pallo)
